@@ -1,5 +1,4 @@
 import unittest
-import io
 from ComplexLogic import Calculator, RLC
 import mock
 
@@ -51,10 +50,6 @@ class MyTestCase(unittest.TestCase):
         calculator.second_complex_number = ComplexNumber(5, 5)
         self.assertEqual(calculator.AddComplexNumbers(), ComplexNumber(10,10))
 
-
-
-
-
     def testDivide(self):
         number1 = ComplexNumber(5, 5)
         self.assertEqual(number1.Divide(ComplexNumber(1,1)),  ComplexNumber(5,0))
@@ -69,8 +64,7 @@ class MyTestCase(unittest.TestCase):
         calculator.second_complex_number = ComplexNumber(2, 2)
         self.assertEqual(calculator.DivideComplexNumbers(), ComplexNumber(2.5, 0))
         calculator.first_complex_number = ComplexNumber(5, 5)
-        calculator.second_complex_number = ComplexNumber(0, 0)
-        # self.assertRaises(ZeroDivisionError, calculator.DivideComplexNumbers)
+        elf.assertRaises(ZeroDivisionError, calculator.DivideComplexNumbers)
 
 
         # number4 = ComplexNumber(5,5)

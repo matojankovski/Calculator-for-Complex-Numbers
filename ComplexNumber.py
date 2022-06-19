@@ -2,7 +2,18 @@ import math
 import re
 
 COMPLEXNUMBERPATTERN = "^(?=[iIjJ.\d+-])([+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[+-]?\d+)?(?![iIjJ.\d]))?([+-]?(?:(?:\d+(?:\.\d*)?|\.\d+)(?:[+-]?\d+)?)?[iIjJ])?$"
+VALUEOFELEMENT = "^(\d*\.?\d*)([pmukgMG]*)"
 
+scales = {
+            "p": 0.000000000001,
+            "n": 0.000000001,
+            "u": 0.000001,
+            "m": 0.001,
+            "":  1,
+            "k": 1000,
+            "M": 1000000,
+            "G": 1000000000
+    }
 
 class ComplexNumber:
     def __init__(self, real_part, imag_part):
@@ -93,3 +104,15 @@ class ComplexNumber:
         except ZeroDivisionError:
             answer = "This number doesn't have a polar form."
         return answer
+
+
+    @staticmethod
+    def ParseValue(inputelement):
+        value = re.findall(VALUEOFELEMENT, inputelement)
+        if not value:
+            raise AttributeError("COULD NOT PARSE COMPLEX NUMBER")
+        number, unit = float(value[0][0]), value[0][1]
+        finalnumber = round(number * scales[unit], 9)
+
+        return finalnumber
+

@@ -7,20 +7,12 @@ SUBTRACT = "SUBTRACT"
 ADD = "ADD"
 MULTIPY = "MULTIPLY"
 DIVIDE = "DIVIDE"
+COMPLEX = "COMPLEX"
+RLC = "RLC"
 
 COMPLEXNUMBERPATTERN = "^(?=[iIjJ.\d+-])([+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[+-]?\d+)?(?![iIjJ.\d]))?([+-]?(?:(?:\d+(?:\.\d*)?|\.\d+)(?:[+-]?\d+)?)?[iIjJ])?$"
 
 
-scales = {
-            "p": 0.000000000001,
-            "n": 0.000000001,
-            "u": 0.000001,
-            "m": 0.001,
-            "":  1,
-            "k": 1000,
-            "M": 1000000,
-            "G": 1000000000
-    }
 
 
 
@@ -41,8 +33,12 @@ class Calculator:
         self.phase = 0
 
 
+    def DefineCalculator(self):
+        if choise == COMPLEX:
+            self.ComputeComplexNumber()
+        elif choise == RLC:
+            self.ComputeRLC()
 
-    
 
 
 
@@ -146,8 +142,7 @@ class Calculator:
     #         return message
 
 
-
-    def Compute(self):
+    def ComputeComplexNumber(self):
         while True:
             self.DefineOperation()
             if self.operation == ADD:
@@ -158,11 +153,6 @@ class Calculator:
                 print(self.DivideComplexNumbers())
             elif self.operation == MULTIPY:
                 print(self.MultiplyComplexNumbers())
-
-
-
-
-class RLC(Calculator):
 
     def ChooseElement(self):
         print("Choose R, L or C")
@@ -182,6 +172,176 @@ class RLC(Calculator):
                 print("Wrong input")
                 continue
         return element
+
+    def GetValue(self):
+        while True:
+            vstup = input()
+            try:
+                return ComplexNumber.ParseValue(vstup)
+            except AttributeError as ex:
+                print("Wrong input")
+                continue
+
+
+    def GetValueAndFrequency(self):
+        print("Insert value")
+        self.value = self.GetValue()
+        print("Insert frequency")
+        self.frequency = self.GetValue()
+
+        # def GetComplexNumber(self):
+        #     while True:
+        #         number = input()
+        #         try:
+        #             return ComplexNumber.ParseComplexNumer(number)
+        #         except AttributeError as ex:
+        #             print("Wrong input")
+        #             continue
+
+    def ComputeRLC(self):
+        while True:
+            elementone = self.ChooseElement()
+            if elementone == "R":
+                self.first_complex_number.real_part, self.first_complex_number.imag_part = self.GetZofResistor()
+            elif elementone == "C":
+                self.first_complex_number.real_part, self.second_complex_number.imag_part = self.GetZofCapacitor()
+            elif elementone == "L":
+                self.first_complex_number.real_part, self.first_complex_number.imag_part = self.GetZofInductor()
+            print("Choose 2nd element:")
+            elementtwo = self.ChooseElement()
+            if elementtwo == "R":
+                self.second_complex_number.real_part, self.second_complex_number.imag_part = self.GetZofResistor()
+            elif elementtwo == "C":
+                self.second_complex_number.real_part, self.second_complex_number.imag_part = self.GetZofCapacitor()
+            elif elementtwo == "L":
+                self.second_complex_number.real_part, self.second_complex_number.imag_part = self.GetZofInductor()
+            connection = self.ChooseSPconnection()
+            if connection == "S":
+                self.GetImpedanceOfSeriesConnection()
+                totalZ, phase = self.GetPolarForm()
+                print(totalZ, phase)
+            elif connection == "P":
+                self.ChangeToAdmitance()
+                self.GetImpedanceOfParallelConnection()
+                totalZ, phase = self.GetPolarForm()
+                print(totalZ, phase)
+
+    def GetZofCapacitor(self):
+        self.GetValueAndFrequency()
+        while True:
+            try:
+                ZofCapacitor = round(1 / (2* self.pi * self.frequency * self.value), 8)
+                return 0, -ZofCapacitor
+            except ZeroDivisionError:
+                message = "Division by Zero. Enter correct values!"
+                return message
+
+
+    def GetZofInductor(self):
+        self.GetValueAndFrequency()
+        ZofInductor = round(2 * self.pi * self.frequency * self.value, 8)
+        return 0, ZofInductor
+
+    def GetZofResistor(self):
+        print("Insert resistance")
+        Rimpedance = round(self.GetValue(), 8)
+        return Rimpedance, 0
+
+    def GetImpedanceOfSeriesConnection(self):
+        result = self.AddComplexNumbers()
+        print(result)
+
+    def GetImpedanceOfParallelConnection(self):
+        result = self.AddComplexNumbers()
+        print(result)
+
+
+
+    def DisplayResultInSIValues(self):
+        if self.imgResult < 0:
+            operator = ""
+            imag_char = "i"
+        else:
+            operator = "+"
+            imag_char = "i"
+
+        return "{}{}{}{}".format(self.realResult, operator, self.imgResult, imag_char, "")
+
+    def ChangeToAdmitance(self):
+        try:
+            self.first_complex_number.real_part = 1 / self.first_complex_number.real_part
+        except ZeroDivisionError:
+            self.first_complex_number.real_part = 0
+        try:
+            self.first_complex_number.imag_part = 1 / self.first_complex_number.imag_part
+        except ZeroDivisionError:
+            self.first_complex_number.imag_part = 0
+        try:
+            self.second_complex_number.real_part = 1 / self.second_complex_number.real_part
+        except ZeroDivisionError:
+            self.second_complex_number.real_part = 0
+        try:
+            self.second_complex_number.imag_part = 1 / self.second_complex_number.imag_part
+        except ZeroDivisionError:
+            self.second_complex_number.imag_part = 0
+
+
+
+
+
+
+    def ComputeRLC(self):
+        while True:
+            elementone = self.ChooseElement()
+            if elementone == "R":
+                self.first_complex_number.real_part, self.first_complex_number.imag_part = self.GetZofResistor()
+            elif elementone == "C":
+                self.first_complex_number.real_part, self.second_complex_number.imag_part = self.GetZofCapacitor()
+            elif elementone == "L":
+                self.first_complex_number.real_part, self.first_complex_number.imag_part = self.GetZofInductor()
+            print("Choose 2nd element:")
+            elementtwo = self.ChooseElement()
+            if elementtwo == "R":
+                self.second_complex_number.real_part, self.second_complex_number.imag_part = self.GetZofResistor()
+            elif elementtwo == "C":
+                self.second_complex_number.real_part, self.second_complex_number.imag_part = self.GetZofCapacitor()
+            elif elementtwo == "L":
+                self.second_complex_number.real_part, self.second_complex_number.imag_part = self.GetZofInductor()
+            connection = self.ChooseSPconnection()
+            if connection == "S":
+                self.GetImpedanceOfSeriesConnection()
+                totalZ, phase = self.GetPolarForm()
+                print(totalZ, phase)
+            elif connection == "P":
+                self.ChangeToAdmitance()
+                self.GetImpedanceOfParallelConnection()
+                totalZ, phase = self.GetPolarForm()
+                print(totalZ, phase)
+
+
+    def ChooseSPconnection(self):
+        print("Choose S for series or P for parallel connection of elements")
+        connection = ""
+        while True:
+            vstup = input()
+            if vstup == "S":
+                connection = "S"
+                break
+            elif vstup == "P":
+                connection = "P"
+                break
+            else:
+                print("Wrong input")
+                continue
+        return connection
+
+
+
+
+
+class RLC(Calculator):
+
+
 
     def GetValue(self):
         finalnumber = 0
@@ -267,35 +427,6 @@ class RLC(Calculator):
 
 
 
-
-
-    def Calculate(self):
-        while True:
-            elementone = self.ChooseElement()
-            if elementone == "R":
-                self.first_complex_number.real_part, self.first_complex_number.imag_part = self.GetZofResistor()
-            elif elementone == "C":
-                self.first_complex_number.real_part, self.second_complex_number.imag_part = self.GetZofCapacitor()
-            elif elementone == "L":
-                self.first_complex_number.real_part, self.first_complex_number.imag_part = self.GetZofInductor()
-            print("Choose 2nd element:")
-            elementtwo = self.ChooseElement()
-            if elementtwo == "R":
-                self.second_complex_number.real_part, self.second_complex_number.imag_part = self.GetZofResistor()
-            elif elementtwo == "C":
-                self.second_complex_number.real_part, self.second_complex_number.imag_part = self.GetZofCapacitor()
-            elif elementtwo == "L":
-                self.second_complex_number.real_part, self.second_complex_number.imag_part = self.GetZofInductor()
-            connection = self.ChooseSPconnection()
-            if connection == "S":
-                self.GetImpedanceOfSeriesConnection()
-                totalZ, phase = self.GetPolarForm()
-                print(totalZ, phase)
-            elif connection == "P":
-                self.ChangeToAdmitance()
-                self.GetImpedanceOfParallelConnection()
-                totalZ, phase = self.GetPolarForm()
-                print(totalZ, phase)
 
 
     def ChooseSPconnection(self):
@@ -387,11 +518,11 @@ if __name__ == '__main__':
         vstup = input()
         if vstup == "COMPLEX":
             kalkulacka = Calculator()
-            kalkulacka.Compute()
+            kalkulacka.ComputeComplexNumber()
             break
         elif vstup == "RLC":
             kalkulacka = RLC()
-            kalkulacka.Calculate()
+            kalkulacka.ComputeRLC()
             break
         else:
             print("Enter valid statement.")
