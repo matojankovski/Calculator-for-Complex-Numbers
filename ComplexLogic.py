@@ -96,11 +96,14 @@ class Calculator:
             self.QuitProgram()
 
     def QuitProgram(self):
+        print("Enter 'y' to abort the program")
         vstup = input()
         if vstup == "y":
             quit()
         else:
             pass
+
+
 
 
 

@@ -92,7 +92,20 @@ class ComplexNumber:
             answer = "Polar form: {}∠{}°".format(round(modulus, 2), round(phase, 2))
 
         return answer
-
+    # TODO - RLC module not functional yet
+    # @staticmethod
+    # def ParseValue(elementvalue):
+    #     elementvalue_s = re.findall(VALUEOFELEMENT, elementvalue)
+    #     if not elementvalue:
+    #         raise AttributeError("COULD NOT PARSE COMPLEX NUMBER")
+    #     number, unit = float(elementvalue[0][0]), elementvalue[0][1]
+    #     finalnumber = round(number * scales[unit], 9)
+    #     return finalnumber
+    #
+    # def ValueToComplexNumber(self, value, frequency):
+    #     if frequency == 0:
+    #         return ComplexNumber(value, 0)
+    #     return ComplexNumber(0, round(2 * math.pi * frequency * value, 8))
 
 
 
