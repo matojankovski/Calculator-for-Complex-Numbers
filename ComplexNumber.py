@@ -48,40 +48,27 @@ class ComplexNumber:
         realresult = self.real_part + secondcomplexnumber.real_part
         imagresult = self.imag_part + secondcomplexnumber.imag_part
 
-        return ComplexNumber(realresult, imagresult)
+        return ComplexNumber(round(realresult,2), round(imagresult,2))
 
     def Subtract(self, secondcomplexnumber):
         realresult = self.real_part - secondcomplexnumber.real_part
         imagresult = self.imag_part - secondcomplexnumber.imag_part
 
-        return ComplexNumber(realresult, imagresult)
+        return ComplexNumber(round(realresult,2), round(imagresult,2))
 
     def Multiply(self, secondcomplexnumber):
         realresult = (self.real_part * secondcomplexnumber.real_part ) - (self.imag_part * secondcomplexnumber.imag_part)
         imagresult = (self.real_part * secondcomplexnumber.imag_part) + (self.imag_part * secondcomplexnumber.real_part)
 
-        return ComplexNumber(realresult, imagresult)
+        return ComplexNumber(round(realresult,2), round(imagresult,2))
 
     def Divide(self, secondcomplexnumber):
         try:
             realresult = (self.real_part * secondcomplexnumber.real_part + self.imag_part * secondcomplexnumber.imag_part)/ (secondcomplexnumber.real_part**2 + secondcomplexnumber.imag_part**2)
             imagresult = (self.imag_part * secondcomplexnumber.real_part - self.real_part*secondcomplexnumber.imag_part)/ (secondcomplexnumber.real_part**2 + secondcomplexnumber.imag_part**2)
-            return ComplexNumber(realresult, imagresult)
+            return ComplexNumber(round(realresult,2), round(imagresult,2))
         except ZeroDivisionError as ex:
             raise ex
-
-
-    # def DisplayResultNumberInString(self):
-    #     if self.imag_part < 0:
-    #         operator = ""
-    #         imag_char = "i"
-    #     else:
-    #         operator = "+"
-    #         imag_char = "i"
-    #
-    #     return "Rectangular form: {}{}{}{}".format(round(self.real_part, 2), operator, round(self.imag_part, 2),
-    #                                                 imag_char)
-
 
     def DisplayResultNumberInString(self):
         #Rectangular form:
@@ -97,22 +84,15 @@ class ComplexNumber:
 
 
     def DisplayInPolarForm(self):
-        try:
-            modulus = round(math.sqrt(self.real_part ** 2 + self.imag_part ** 2), 2)
-            phase = math.atan(self.imag_part / self.real_part) * 180 / math.pi
-            answer = "Polar form : {}∠{}°".format(round(modulus, 2), round(phase, 2))
-        except ZeroDivisionError:
+        if self.imag_part == 0 or self.real_part == 0:
             answer = "This number doesn't have a polar form."
+        else:
+            modulus = math.sqrt(self.real_part ** 2 + self.imag_part ** 2)
+            phase = math.atan(self.imag_part / self.real_part) * 180 / math.pi
+            answer = "Polar form: {}∠{}°".format(round(modulus, 2), round(phase, 2))
+
         return answer
 
 
-    @staticmethod
-    def ParseValue(inputelement):
-        value = re.findall(VALUEOFELEMENT, inputelement)
-        if not value:
-            raise AttributeError("COULD NOT PARSE COMPLEX NUMBER")
-        number, unit = float(value[0][0]), value[0][1]
-        finalnumber = round(number * scales[unit], 9)
 
-        return finalnumber
 
