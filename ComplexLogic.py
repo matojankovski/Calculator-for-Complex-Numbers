@@ -11,6 +11,19 @@ DIVIDE = "DIVIDE"
 COMPLEXNUMBERPATTERN = "^(?=[iIjJ.\d+-])([+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[+-]?\d+)?(?![iIjJ.\d]))?([+-]?(?:(?:\d+(?:\.\d*)?|\.\d+)(?:[+-]?\d+)?)?[iIjJ])?$"
 
 
+scales = {
+            "p": 0.000000000001,
+            "n": 0.000000001,
+            "u": 0.000001,
+            "m": 0.001,
+            "":  1,
+            "k": 1000,
+            "M": 1000000,
+            "G": 1000000000
+    }
+
+
+
 class Calculator:
 
 
@@ -27,18 +40,7 @@ class Calculator:
         self.modulus = 0
         self.phase = 0
 
-        self.a = 0
 
-        self.scales = {
-            "p": 0.000000000001,
-            "n": 0.000000001,
-            "u": 0.000001,
-            "m": 0.001,
-            "":  1,
-            "k": 1000,
-            "M": 1000000,
-            "G": 1000000000
-    }
 
     
 
@@ -93,14 +95,26 @@ class Calculator:
 
     def DivideComplexNumbers(self):
         try:
-            self.realResult = (self.first_complex_number.real_part * self.second_complex_number.real_part + self.first_complex_number.imag_part * self.second_complex_number.imag_part) / (self.second_complex_number.real_part*self.second_complex_number.real_part + self.second_complex_number.imag_part*self.second_complex_number.imag_part)
-            self.imgResult = (self.first_complex_number.imag_part*self.second_complex_number.real_part - self.first_complex_number.real_part*self.second_complex_number.imag_part) / (self.second_complex_number.real_part*self.second_complex_number.real_part + self.second_complex_number.imag_part*self.second_complex_number.imag_part)
-            result = [round(self.realResult, 3), round(self.imgResult, 3)]
-            return result
+            return self.first_complex_number.Divide(self.second_complex_number)
         except ZeroDivisionError as ex:
-            print ("Division by Zero!")
-            continue
+            print("Division by Zero!")
 
+    def GivePolarForm(self):
+        if self.operation == ADD:
+            print()
+
+
+
+    # def DivideComplexNumbers(self):
+    #     try:
+    #         self.realResult = (self.first_complex_number.real_part * self.second_complex_number.real_part + self.first_complex_number.imag_part * self.second_complex_number.imag_part) / (self.second_complex_number.real_part*self.second_complex_number.real_part + self.second_complex_number.imag_part*self.second_complex_number.imag_part)
+    #         self.imgResult = (self.first_complex_number.imag_part*self.second_complex_number.real_part - self.first_complex_number.real_part*self.second_complex_number.imag_part) / (self.second_complex_number.real_part*self.second_complex_number.real_part + self.second_complex_number.imag_part*self.second_complex_number.imag_part)
+    #         result = [round(self.realResult, 3), round(self.imgResult, 3)]
+    #         return result
+    #     except ZeroDivisionError as ex:
+    #         print ("Division by Zero!")
+    #         continue
+    #
 
 
 
@@ -136,27 +150,14 @@ class Calculator:
     def Compute(self):
         while True:
             self.DefineOperation()
-            if self.operation == "ADD":
-                self.AddComplexNumbers()
-                print(self.DisplayResultNumberInString())
-                self.GetPolarForm()
-                print(self.DisplayInPolarForm())
+            if self.operation == ADD:
+                print(self.AddComplexNumbers())
             elif self.operation == SUBTRACT:
-                self.SubtrackComplexNumbers()
-                print(self.DisplayResultNumberInString())
-                self.GetPolarForm()
-                print(self.DisplayInPolarForm())
-            elif self.operation == "DIVIDE":
-                self.DivideComplexNumbers()
-                print(self.DisplayResultNumberInString())
-                self.GetPolarForm()
-                print(self.DisplayInPolarForm())
-            elif self.operation == "MULTIPLY":
-                self.MultiplyComplexNumbers()
-                print(self.DisplayResultNumberInString())
-                self.GetPolarForm()
-                print(self.DisplayInPolarForm())
-
+                print(self.SubtrackComplexNumbers())
+            elif self.operation == DIVIDE:
+                print(self.DivideComplexNumbers())
+            elif self.operation == MULTIPY:
+                print(self.MultiplyComplexNumbers())
 
 
 

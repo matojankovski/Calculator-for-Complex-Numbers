@@ -43,13 +43,51 @@ class MyTestCase(unittest.TestCase):
         number2 = ComplexNumber(-5, -5)
         self.assertEqual(number2.Add(ComplexNumber(-5, -5)), ComplexNumber(-10, -10))
         number3 = ComplexNumber(0, -5)
-        self.assertEqual(number3.Add(ComplexNumber(-5, -5)), ComplexNumber(5, 0))
+        self.assertEqual(number3.Add(ComplexNumber(-5, -4)), ComplexNumber(-5, -9))
 
     def testAddComplexNumbers(self):
         calculator = Calculator()
-        first_complex_number = ComplexNumber(-5,5)
-        secondcomplexnumber = ComplexNumber(-5, -5)
-        self.assertEqual(calculator.AddComplexNumbers(), (0,0))
+        calculator.first_complex_number = ComplexNumber(5, 5)
+        calculator.second_complex_number = ComplexNumber(5, 5)
+        self.assertEqual(calculator.AddComplexNumbers(), ComplexNumber(10,10))
+
+
+
+
+
+    def testDivide(self):
+        number1 = ComplexNumber(5, 5)
+        self.assertEqual(number1.Divide(ComplexNumber(1,1)),  ComplexNumber(5,0))
+        number2 = ComplexNumber(5, 5)
+        self.assertEqual(number2.Divide(ComplexNumber(2.5, -2.5)), ComplexNumber(0, 2))
+        number3 = ComplexNumber(5, 5)
+        self.assertRaises(ZeroDivisionError, number3.Divide, ComplexNumber(0, 0))
+
+    def testDivideComplexNumbers(self):
+        calculator = Calculator()
+        calculator.first_complex_number = ComplexNumber(5, 5)
+        calculator.second_complex_number = ComplexNumber(2, 2)
+        self.assertEqual(calculator.DivideComplexNumbers(), ComplexNumber(2.5, 0))
+        calculator.first_complex_number = ComplexNumber(5, 5)
+        calculator.second_complex_number = ComplexNumber(0, 0)
+        # self.assertRaises(ZeroDivisionError, calculator.DivideComplexNumbers)
+
+
+        # number4 = ComplexNumber(5,5)
+        # self.assertEqual(number4.Divide(ComplexNumber(0,0)), ComplexNumber(0,0))
+
+
+
+
+
+
+
+
+    # def testAddComplexNumbers(self):
+    #     calculator = Calculator()
+    #     first_complex_number = ComplexNumber(-5,5)
+    #     secondcomplexnumber = ComplexNumber(-5, -5)
+    #     self.assertEqual(calculator.AddComplexNumbers(), (0,0))
 
 
 
@@ -82,52 +120,6 @@ class MyTestCase(unittest.TestCase):
 
 
 
-
-        # calculator = Calculator()
-        # number1 = ComplexNumber(5,5)
-        # number2 = ComplexNumber(5,5)
-        # result = calculator.AddComplexNumbers()
-        # self.assertEqual(result, ComplexNumber(10, 10))
-
-
-        # TODO: prepisat na  novy format
-        # re, im = calculator.GetComplexNumber()
-        # self.assertEqual(re, 2.5)
-        # self.assertEqual(im, 0)
-        # re, im = calculator.GetComplexNumber()
-        # self.assertEqual(re, 0)
-        # self.assertEqual(im, 2.5)
-        # re, im = calculator.GetComplexNumber()
-        # self.assertEqual(re, -2.5)
-        # self.assertEqual(im, 0)
-        # re, im = calculator.GetComplexNumber()
-        # self.assertEqual(re, 0)
-        # self.assertEqual(im, -2.5)
-        # re, im = calculator.GetComplexNumber()
-        # self.assertEqual(re, 2.5)
-        # self.assertEqual(im, 2.5)
-        # re, im = calculator.GetComplexNumber()
-        # self.assertEqual(re, -2.5)
-        # self.assertEqual(im, -2.5)
-        # re, im = calculator.GetComplexNumber()
-        # self.assertEqual(re, 0)
-        # self.assertEqual(im, 0)
-        # re, im = calculator.GetComplexNumber()
-        # self.assertEqual(re, 0)
-        # self.assertEqual(im, 1)
-        # re, im = calculator.GetComplexNumber()
-        # self.assertEqual(re, 0)
-        # self.assertEqual(im, 0.4)
-        # re, im = calculator.GetComplexNumber()
-        # self.assertEqual(re, 0)
-        # self.assertEqual(im, 1)
-        # re, im = calculator.GetComplexNumber()
-        # # self.assertEqual(re, 2)
-        # # self.assertEqual(im, 1)
-        # # re, im = calculator.GetComplexNumber()
-        # # self.assertEqual(re, 2)
-        # # self.assertEqual(im, -1)
-        # # # error = calculator.GetComplexNumber()
 
 
 
