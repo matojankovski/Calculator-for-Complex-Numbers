@@ -13,16 +13,82 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(ComplexNumber.ParseComplexNumer("4.5-5.7i"), ComplexNumber(4.5, -5.7))
         self.assertEqual(ComplexNumber.ParseComplexNumer("-1i"), ComplexNumber(0, -1))
         self.assertEqual(ComplexNumber.ParseComplexNumer("-i"), ComplexNumber(0, -1))
+        self.assertEqual(ComplexNumber.ParseComplexNumer("-5.5"), ComplexNumber(-5.5, 0))
+        self.assertEqual(ComplexNumber.ParseComplexNumer("0-5i"), ComplexNumber(0, -5))
         self.assertRaises(AttributeError, ComplexNumber.ParseComplexNumer, "abc")
 
 
     # @mock.patch("ComplexLogic.input", create=True)
     @mock.patch("builtins.input", create=True)
     def test_GetComplexNumber(self, mocked_input):
-        mocked_input.side_effect = ["2.5", "2.5i", "-2.5", "-2.5i", "2.5+2.5i", "-2.5-2.5i", "0+0i", "j", ".4i", "i"]#, "2+i", "2-i"]
+        mocked_input.side_effect = ["2.5", "2.5i", "-2.5", "-2.5i", "2.5+2.5i", "-2.5-2.5i", "0+0i", "j", ".4i", "i", "2+i", "2-i", "0-5i"]
         calculator = Calculator()
         self.assertEqual(calculator.GetComplexNumber(), ComplexNumber(2.5, 0))
         self.assertEqual(calculator.GetComplexNumber(), ComplexNumber(0, 2.5))
+        self.assertEqual(calculator.GetComplexNumber(), ComplexNumber(-2.5, 0))
+        self.assertEqual(calculator.GetComplexNumber(), ComplexNumber(0, -2.5))
+        self.assertEqual(calculator.GetComplexNumber(), ComplexNumber(2.5, 2.5))
+        self.assertEqual(calculator.GetComplexNumber(), ComplexNumber(-2.5, -2.5))
+        self.assertEqual(calculator.GetComplexNumber(), ComplexNumber(0, 0))
+        self.assertEqual(calculator.GetComplexNumber(), ComplexNumber(0,1))
+        self.assertEqual(calculator.GetComplexNumber(), ComplexNumber(0, 0.4))
+        self.assertEqual(calculator.GetComplexNumber(), ComplexNumber(0, 1))
+        self.assertEqual(calculator.GetComplexNumber(), ComplexNumber(2, 1))
+        self.assertEqual(calculator.GetComplexNumber(), ComplexNumber(2, -1))
+        self.assertEqual(calculator.GetComplexNumber(), ComplexNumber(0, -5))
+
+    def testAdd(self):
+        number1 = ComplexNumber(5, 5)
+        self.assertEqual(number1.Add(ComplexNumber(5.2, 5.3)),  ComplexNumber(10.2, 10.3))
+        number2 = ComplexNumber(-5, -5)
+        self.assertEqual(number2.Add(ComplexNumber(-5, -5)), ComplexNumber(-10, -10))
+        number3 = ComplexNumber(0, -5)
+        self.assertEqual(number3.Add(ComplexNumber(-5, -5)), ComplexNumber(5, 0))
+
+    def testAddComplexNumbers(self):
+        calculator = Calculator()
+        first_complex_number = ComplexNumber(-5,5)
+        secondcomplexnumber = ComplexNumber(-5, -5)
+        self.assertEqual(calculator.AddComplexNumbers(), (0,0))
+
+
+
+
+    def testSubtract(self):
+        number1 = ComplexNumber(-5, -5)
+        self.assertEqual(number1.Subtract(ComplexNumber(5, 5)),  ComplexNumber(-10, -10))
+        number2 = ComplexNumber(-5, -5)
+        self.assertEqual(number2.Subtract(ComplexNumber(-8, 5)),  ComplexNumber(3, -10))
+        number3 = ComplexNumber(-5, -5)
+        self.assertEqual(number3.Subtract(ComplexNumber(-2, 5)),  ComplexNumber(-3, -10))
+        number4 = ComplexNumber(0, 0)
+        self.assertEqual(number4.Subtract(ComplexNumber(-2, 5)), ComplexNumber(2, -5))
+
+    def testMultiply(self):
+        number1 = ComplexNumber(1, 1)
+        self.assertEqual(number1.Multiply(ComplexNumber(5, 5)), ComplexNumber(0, 10))
+        number2 = ComplexNumber(0, 0)
+        self.assertEqual(number2.Multiply(ComplexNumber(5, 5)), ComplexNumber(0, 0))
+        number3 = ComplexNumber(-1, -1)
+        self.assertEqual(number3.Multiply(ComplexNumber(5, 5)), ComplexNumber(0, -10))
+        number4 = ComplexNumber(0, -5)
+        self.assertEqual(number4.Multiply(ComplexNumber(5, 5)), ComplexNumber(25, -25))
+        number5 = ComplexNumber(-5, -5)
+        self.assertEqual(number5.Multiply(ComplexNumber(5, 5)), ComplexNumber(0, -50))
+
+
+
+
+
+
+
+
+        # calculator = Calculator()
+        # number1 = ComplexNumber(5,5)
+        # number2 = ComplexNumber(5,5)
+        # result = calculator.AddComplexNumbers()
+        # self.assertEqual(result, ComplexNumber(10, 10))
+
 
         # TODO: prepisat na  novy format
         # re, im = calculator.GetComplexNumber()
@@ -76,14 +142,14 @@ class MyTestCase(unittest.TestCase):
     #
     #
 
-    @mock.patch('sys.stdout', new_callable=io.StringIO)
-    def test_testujemPrint(self, expected_output, mocked_output):
-        c = Calculator()
-        c.a = 5
-        c.testujemPrint()
-        expected_output = "Hello there"
-        self.assertEqual(mocked_output.getvalue(), expected_output)
-
+    # @mock.patch('sys.stdout', new_callable=io.StringIO)
+    # def test_testujemPrint(self, expected_output, mocked_output):
+    #     c = Calculator()
+    #     c.a = 5
+    #     c.testujemPrint()
+    #     expected_output = "Hello there"
+    #     self.assertEqual(mocked_output.getvalue(), expected_output)
+    #
 
 
 
@@ -284,7 +350,9 @@ class MyTestCase(unittest.TestCase):
     # def test_GetImpedanceOfSeriesConnection(self):
 
 
-
+    def test_tmp(self):
+        num = ComplexNumber(5,6)
+        print("Number:", num)
 
 
 

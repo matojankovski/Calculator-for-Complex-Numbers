@@ -1,3 +1,4 @@
+import math
 import re
 
 COMPLEXNUMBERPATTERN = "^(?=[iIjJ.\d+-])([+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[+-]?\d+)?(?![iIjJ.\d]))?([+-]?(?:(?:\d+(?:\.\d*)?|\.\d+)(?:[+-]?\d+)?)?[iIjJ])?$"
@@ -13,6 +14,12 @@ class ComplexNumber:
             return self.real_part == other.real_part and self.imag_part == other.imag_part
         return False
 
+    def __repr__(self):
+        return self.DisplayResultNumberInString()
+
+    # def __repr__(self):
+    #     return self.DisplayInPolarForm()
+
     @staticmethod
     def ParseComplexNumer(complexnumber):
         complex_number = re.findall(COMPLEXNUMBERPATTERN, complexnumber)
@@ -27,3 +34,54 @@ class ComplexNumber:
         else:
             imag_number = 0
         return ComplexNumber(real_number, imag_number)
+
+    def Add(self, secondcomplexnumber):
+        realresult = self.real_part + secondcomplexnumber.real_part
+        imagresult = self.imag_part + secondcomplexnumber.imag_part
+
+        return ComplexNumber(realresult, imagresult)
+
+    def Subtract(self, secondcomplexnumber):
+        realresult = self.real_part - secondcomplexnumber.real_part
+        imagresult = self.imag_part - secondcomplexnumber.imag_part
+
+        return ComplexNumber(realresult, imagresult)
+
+    def Multiply(self, secondcomplexnumber):
+        realresult = (self.real_part * secondcomplexnumber.real_part ) - (self.imag_part * secondcomplexnumber.imag_part)
+        imagresult = (self.real_part * secondcomplexnumber.imag_part) + (self.imag_part * secondcomplexnumber.real_part)
+
+        return ComplexNumber(realresult, imagresult)
+
+    def DivideComplexNumbers(self, secondcomplexnumber):
+        try:
+            realresult = (self.realResult.real_part * self.second_complex_number.real_part + self.first_complex_number.imag_part * self.second_complex_number.imag_part) / (self.second_complex_number.real_part*self.second_complex_number.real_part + self.second_complex_number.imag_part*self.second_complex_number.imag_part)
+            self.imgResult = (self.first_complex_number.imag_part*self.second_complex_number.real_part - self.first_complex_number.real_part*self.second_complex_number.imag_part) / (self.second_complex_number.real_part*self.second_complex_number.real_part + self.second_complex_number.imag_part*self.second_complex_number.imag_part)
+            result = [round(self.realResult, 3), round(self.imgResult, 3)]
+            return result
+        except ZeroDivisionError as ex:
+            print ("Division by Zero!")
+            continue
+
+
+
+
+    def DisplayResultNumberInString(self):
+        if self.imag_part < 0:
+            operator = ""
+            imag_char = "i"
+        else:
+            operator = "+"
+            imag_char = "i"
+
+        return "Rectangular form : {}{}{}{}".format(round(self.real_part, 3), operator, round(self.imag_part, 3),
+                                                    imag_char)
+
+    def DisplayInPolarForm(self):
+        try:
+            modulus = round(math.sqrt(self.real_part ** 2 + self.imag_part ** 2), 2)
+            phase = math.atan(self.imag_part / self.real_part) * 180 / math.pi
+            answer = "Polar form : {}∠{}°".format(round(modulus, 2), round(phase, 2))
+        except ZeroDivisionError:
+            answer = "This number doesn't have a polar form"
+        return answer

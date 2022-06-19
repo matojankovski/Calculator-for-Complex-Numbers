@@ -3,6 +3,11 @@ import math
 
 from ComplexNumber import ComplexNumber
 
+SUBTRACT = "SUBTRACT"
+ADD = "ADD"
+MULTIPY = "MULTIPLY"
+DIVIDE = "DIVIDE"
+
 COMPLEXNUMBERPATTERN = "^(?=[iIjJ.\d+-])([+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[+-]?\d+)?(?![iIjJ.\d]))?([+-]?(?:(?:\d+(?:\.\d*)?|\.\d+)(?:[+-]?\d+)?)?[iIjJ])?$"
 
 
@@ -52,20 +57,21 @@ class Calculator:
     def GetOperation(self):
         while True:
             operation = input()
-            if operation == "+":
-                self.operation = "ADD"
-                break
-            elif operation == "-":
-                self.operation = "SUBTRACT"
-                break
-            elif operation == "*":
-                self.operation = "MULTIPLY"
-                break
-            elif operation == "/":
-                self.operation = "DIVIDE"
-                break
-            else:
-                print("Wrong input. Define again the operation.")
+            try:
+                if operation == "+":
+                    self.operation = ADD
+                    break
+                elif operation == "-":
+                    self.operation = SUBTRACT
+                    break
+                elif operation == "*":
+                    self.operation = MULTIPY
+                    break
+                elif operation == "/":
+                    self.operation = DIVIDE
+                    break
+            except AttributeError as ex:
+                print("Wrong input")
                 continue
 
     def DefineOperation(self):
@@ -76,33 +82,14 @@ class Calculator:
         print("Enter 2nd complex number:")
         self.second_complex_number = self.GetComplexNumber()
 
-    # def AddComplexNumbers(self):
-    #     self.realResult = (self.first_complex_number.real_part) + (self.second_complex_number.real_part)
-    #     self.imgResult = (self.first_complex_number.imag_part) + (self.second_complex_number.imag_part)
-    #
-    #     result = [self.realResult, self.imgResult]
-    #     return result
-
     def AddComplexNumbers(self):
-        self.realResult = (self.first_complex_number.real_part) + (self.second_complex_number.real_part)
-        self.imgResult = (self.first_complex_number.imag_part) + (self.second_complex_number.imag_part)
-
-        result = [self.realResult, self.imgResult]
-        return result
+        return self.first_complex_number.Add(self.second_complex_number)
 
     def SubtrackComplexNumbers(self):
-        self.realResult = (self.first_complex_number.real_part) - (self.second_complex_number.real_part)
-        self.imgResult = (self.first_complex_number.imag_part) - (self.second_complex_number.imag_part)
-
-        result = [self.realResult, self.imgResult]
-        return result
+        return self.first_complex_number.Subtract(self.second_complex_number)
 
     def MultiplyComplexNumbers(self):
-        self.realResult = self.first_complex_number.real_part * self.second_complex_number.real_part - self.first_complex_number.imag_part * self.second_complex_number.imag_part
-        self.imgResult = self.first_complex_number.real_part * self.second_complex_number.imag_part + self.first_complex_number.imag_part * self.second_complex_number.real_part
-
-        result = [round(self.realResult, 3), round(self.imgResult, 3)]
-        return result
+        return self.first_complex_number.Multiply(self.second_complex_number)
 
     def DivideComplexNumbers(self):
         try:
@@ -110,39 +97,39 @@ class Calculator:
             self.imgResult = (self.first_complex_number.imag_part*self.second_complex_number.real_part - self.first_complex_number.real_part*self.second_complex_number.imag_part) / (self.second_complex_number.real_part*self.second_complex_number.real_part + self.second_complex_number.imag_part*self.second_complex_number.imag_part)
             result = [round(self.realResult, 3), round(self.imgResult, 3)]
             return result
-        except ZeroDivisionError:
-            message = "Division by Zero!"
-            return message
+        except ZeroDivisionError as ex:
+            print ("Division by Zero!")
+            continue
 
 
 
 
 
-    def DisplayResultNumberInString(self):
-        if self.imgResult < 0:
-            operator = ""
-            imag_char = "i"
-        else:
-            operator = "+"
-            imag_char = "i"
+    # def DisplayResultNumberInString(self):
+    #     if self.imgResult < 0:
+    #         operator = ""
+    #         imag_char = "i"
+    #     else:
+    #         operator = "+"
+    #         imag_char = "i"
+    #
+    #     return "Rectangular form : {}{}{}{}".format(round(self.realResult,2), operator, round(self.imgResult,2), imag_char)
 
-        return "Rectangular form : {}{}{}{}".format(round(self.realResult,2), operator, round(self.imgResult,2), imag_char)
-
-    def DisplayInPolarForm(self):
-        # self.GetPolarForm()
-        answer = "Polar form : {}∠{}°".format(round(self.modulus,2), round(self.phase,2))
-        return answer
-
-
-
-    def GetPolarForm(self):
-        try:
-            self.modulus= round(math.sqrt(self.realResult**2 + self.imgResult**2 ), 2)
-            self.phase = math.atan(self.imgResult/self.realResult)*180/self.pi
-            return self.modulus, round(self.phase,2)
-        except ZeroDivisionError:
-            message = "Division by Zero Error"
-            return message
+    # def DisplayInPolarForm(self):
+    #     # self.GetPolarForm()
+    #     answer = "Polar form : {}∠{}°".format(round(self.modulus,2), round(self.phase,2))
+    #     return answer
+    #
+    #
+    #
+    # def GetPolarForm(self):
+    #     try:
+    #         self.modulus= round(math.sqrt(self.realResult**2 + self.imgResult**2 ), 2)
+    #         self.phase = math.atan(self.imgResult/self.realResult)*180/self.pi
+    #         return self.modulus, round(self.phase,2)
+    #     except ZeroDivisionError:
+    #         message = "Division by Zero Error"
+    #         return message
 
 
 
@@ -154,7 +141,7 @@ class Calculator:
                 print(self.DisplayResultNumberInString())
                 self.GetPolarForm()
                 print(self.DisplayInPolarForm())
-            elif self.operation == "SUBTRACT":
+            elif self.operation == SUBTRACT:
                 self.SubtrackComplexNumbers()
                 print(self.DisplayResultNumberInString())
                 self.GetPolarForm()
