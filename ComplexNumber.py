@@ -2,8 +2,7 @@ import math
 import re
 
 COMPLEXNUMBERPATTERN = "^(?=[iIjJ.\d+-])([+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[+-]?\d+)?(?![iIjJ.\d]))?([+-]?(?:(?:\d+(?:\.\d*)?|\.\d+)(?:[+-]?\d+)?)?[iIjJ])?$"
-VALUEOFELEMENT = "^(\d*\.?\d*)([pmukgMG]*)"
-
+VALUEOFELEMENT = "(\d+\.?\d*)([pmukgMG]*)"
 scales = {
             "p": 0.000000000001,
             "n": 0.000000001,
@@ -26,12 +25,12 @@ class ComplexNumber:
         return False
 
     def __repr__(self):
-        return self.DisplayResultNumberInString()
+        return self.display_result_number_in_string()
 
 
     @staticmethod
-    def ParseComplexNumer(complexnumber):
-        complex_number = re.findall(COMPLEXNUMBERPATTERN, complexnumber)
+    def parse_complex_numer(complex_number_input):
+        complex_number = re.findall(COMPLEXNUMBERPATTERN, complex_number_input)
         if not complex_number:
             raise AttributeError("COULD NOT PARSE COMPLEX NUMBER")
         real_number = float(complex_number[0][0]) if complex_number[0][0] else 0
@@ -44,33 +43,63 @@ class ComplexNumber:
             imag_number = 0
         return ComplexNumber(real_number, imag_number)
 
-    def Add(self, secondcomplexnumber):
-        realresult = self.real_part + secondcomplexnumber.real_part
-        imagresult = self.imag_part + secondcomplexnumber.imag_part
 
-        return ComplexNumber(round(realresult,2), round(imagresult,2))
+    @staticmethod
+    def parse_value(element_value_input):
+        element_value = re.findall(VALUEOFELEMENT, element_value_input)
+        if not element_value:
+            raise AttributeError("COULD NOT PARSE NUMBER")
+        elif not element_value[0][0]:
+            raise AttributeError("COULD NOT PARSE NUMBER")
+        number = float(element_value[0][0])
+        if len(element_value[0]) == 1:
+            final_number = round(number, 2)
+        else:
+            final_number = round(number * scales[element_value[0][1]], 9)
+        return final_number
 
-    def Subtract(self, secondcomplexnumber):
-        realresult = self.real_part - secondcomplexnumber.real_part
-        imagresult = self.imag_part - secondcomplexnumber.imag_part
+    @staticmethod
+    def get_impedance(value, frequency):
+        if frequency == 0:
+            return ComplexNumber(value, 0)
+        return ComplexNumber(0, round(2 * math.pi * frequency * value, 6))
 
-        return ComplexNumber(round(realresult,2), round(imagresult,2))
+    @staticmethod
+    def get_admitance(value, frequency):
+        if frequency == 0:
+            return ComplexNumber(1/value, 0)
+        return ComplexNumber(0, round(1 / (2 * math.pi * frequency * value), 6))
 
-    def Multiply(self, secondcomplexnumber):
-        realresult = (self.real_part * secondcomplexnumber.real_part ) - (self.imag_part * secondcomplexnumber.imag_part)
-        imagresult = (self.real_part * secondcomplexnumber.imag_part) + (self.imag_part * secondcomplexnumber.real_part)
 
-        return ComplexNumber(round(realresult,2), round(imagresult,2))
+    def add(self, second_complex_number):
+        real_result = self.real_part + second_complex_number.real_part
+        imag_result = self.imag_part + second_complex_number.imag_part
 
-    def Divide(self, secondcomplexnumber):
+        return ComplexNumber(round(real_result,6), round(imag_result,6))
+
+    def subtract(self, second_complex_number):
+        real_result = self.real_part - second_complex_number.real_part
+        imag_result = self.imag_part - second_complex_number.imag_part
+
+        return ComplexNumber(round(real_result,6), round(imag_result,6))
+
+    def multiply(self, second_complex_number):
+        real_result = (self.real_part * second_complex_number.real_part ) - (self.imag_part * second_complex_number.imag_part)
+        imag_result = (self.real_part * second_complex_number.imag_part) + (self.imag_part * second_complex_number.real_part)
+
+        return ComplexNumber(round(real_result,6), round(imag_result,6))
+
+    def divide(self, second_complex_number):
         try:
-            realresult = (self.real_part * secondcomplexnumber.real_part + self.imag_part * secondcomplexnumber.imag_part)/ (secondcomplexnumber.real_part**2 + secondcomplexnumber.imag_part**2)
-            imagresult = (self.imag_part * secondcomplexnumber.real_part - self.real_part*secondcomplexnumber.imag_part)/ (secondcomplexnumber.real_part**2 + secondcomplexnumber.imag_part**2)
-            return ComplexNumber(round(realresult,2), round(imagresult,2))
+            real_result = (self.real_part * second_complex_number.real_part + self.imag_part * second_complex_number.imag_part) / (second_complex_number.real_part ** 2 + second_complex_number.imag_part ** 2)
+            imag_result = (self.imag_part * second_complex_number.real_part - self.real_part * second_complex_number.imag_part) / (second_complex_number.real_part ** 2 + second_complex_number.imag_part ** 2)
+            return ComplexNumber(round(real_result,2), round(imag_result,2))
         except ZeroDivisionError as ex:
             raise ex
 
-    def DisplayResultNumberInString(self):
+
+
+    def display_result_number_in_string(self):
         #Rectangular form:
         if self.imag_part < 0:
             operator = ""
@@ -79,33 +108,20 @@ class ComplexNumber:
             operator = "+"
             imag_char = "i"
 
-        return "Rectangular form: {}{}{}{}\n{}".format(round(self.real_part, 2), operator, round(self.imag_part, 2),
-                                                         imag_char, self.DisplayInPolarForm())
+        return "Rectangular form: {}{}{}{}\n{}".format(round(self.real_part, 6), operator, round(self.imag_part, 6),
+                                                       imag_char, self.display_in_polar_form())
 
 
-    def DisplayInPolarForm(self):
-        if self.imag_part == 0 or self.real_part == 0:
-            answer = "This number doesn't have a polar form."
+    def display_in_polar_form(self):
+        if self.real_part == 0:
+        # if self.imag_part == 0 or self.real_part == 0:
+            modulus = math.sqrt(self.real_part ** 2 + self.imag_part ** 2)
+            phase = 90
+            answer = "Polar form: {}∠{}°".format(round(modulus, 4), round(phase, 2))
         else:
             modulus = math.sqrt(self.real_part ** 2 + self.imag_part ** 2)
             phase = math.atan(self.imag_part / self.real_part) * 180 / math.pi
-            answer = "Polar form: {}∠{}°".format(round(modulus, 2), round(phase, 2))
+            answer = "Polar form: {}∠{}°".format(round(modulus, 4), round(phase, 2))
 
         return answer
-    # TODO - RLC module not functional yet
-    # @staticmethod
-    # def ParseValue(elementvalue):
-    #     elementvalue_s = re.findall(VALUEOFELEMENT, elementvalue)
-    #     if not elementvalue:
-    #         raise AttributeError("COULD NOT PARSE COMPLEX NUMBER")
-    #     number, unit = float(elementvalue[0][0]), elementvalue[0][1]
-    #     finalnumber = round(number * scales[unit], 9)
-    #     return finalnumber
-    #
-    # def ValueToComplexNumber(self, value, frequency):
-    #     if frequency == 0:
-    #         return ComplexNumber(value, 0)
-    #     return ComplexNumber(0, round(2 * math.pi * frequency * value, 8))
-
-
 
