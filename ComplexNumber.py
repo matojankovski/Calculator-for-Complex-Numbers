@@ -27,7 +27,7 @@ class ComplexNumber:
     def __repr__(self):
         return self.display_result_number_in_string()
 
-
+    #method will parse number - complex number into real and imag number. Method will return class Complex number
     @staticmethod
     def parse_complex_numer(complex_number_input):
         complex_number = re.findall(COMPLEXNUMBERPATTERN, complex_number_input)
@@ -43,7 +43,7 @@ class ComplexNumber:
             imag_number = 0
         return ComplexNumber(real_number, imag_number)
 
-
+    #method will parse number with unit. 4m = 0.004, etc. Invalid input will not parse
     @staticmethod
     def parse_value(element_value_input):
         element_value = re.findall(VALUEOFELEMENT, element_value_input)
@@ -113,8 +113,6 @@ class ComplexNumber:
         except ZeroDivisionError as ex:
             raise ex
 
-
-
     def display_result_number_in_string(self):
         #Rectangular form:
         if self.imag_part < 0:
@@ -129,7 +127,8 @@ class ComplexNumber:
 
     def display_in_polar_form(self):
         # if self.real_part == 0:
-        #TODO CHECK POLAR FORM
+        #TODO CHECK POLAR FORM for RLC module. Idea - new class RLC for RLC elements.
+        #C has -90 phase. L has +90 phase
         if self.imag_part == 0 or self.real_part == 0:
             answer = "This number does not have polar form."
             # modulus = math.sqrt(self.real_part ** 2 + self.imag_part ** 2)

@@ -47,10 +47,6 @@ class MyTestCase(unittest.TestCase):
         self.assertRaises(AttributeError, ComplexNumber.parse_value, "l")
         self.assertRaises(AttributeError, ComplexNumber.parse_value, "-4m")
 
-
-
-
-
     @mock.patch("builtins.input", create=True)
     def test_get_value_of_element(self, mocked_input):
         mocked_input.side_effect = ["4m", "4", "4.5m", "0.5", "20m"]

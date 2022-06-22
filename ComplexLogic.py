@@ -110,6 +110,8 @@ class Calculator:
 
         return self.parallel_numerator_number1.divide(self.parallel_denominator_number2)
 
+    #TODO - improve function. Divide into two functions - one in Class ComplexNumber as static. Second here to allow
+    #easier testing of user input
     def define_element(self):
         print("Define element: R, L or C")
         while True:
@@ -125,6 +127,8 @@ class Calculator:
                 print("Wrong input")
                 continue
 
+    # TODO - improve function. Divide into two functions - one in Class ComplexNumber as static. Second here to allow
+    # easier testing of user input
     def define_connection(self):
         print("Define connection: S for series or P for parallel")
         while True:
@@ -140,6 +144,7 @@ class Calculator:
                 print("Wrong input")
                 continue
 
+    #TODO - make this more simple.
     def get_impedance_of_two_elements(self):
         self.define_connection()
         self.element_1, self.unit = self.define_element()
