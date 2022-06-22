@@ -23,8 +23,8 @@ class Calculator:
 
 
     def __init__(self):
-        self.realResult = 0
-        self.imgResult = 0
+        # self.realResult = 0
+        # self.imgResult = 0
         self.operation = "+"
         self.first_complex_number = None
         self.second_complex_number = None
@@ -76,21 +76,10 @@ class Calculator:
         while True:
             operation = input()
             try:
-                if operation == "+":
-                    self.operation = ADD
-                    break
-                elif operation == "-":
-                    self.operation = SUBTRACT
-                    break
-                elif operation == "*":
-                    self.operation = MULTIPY
-                    break
-                elif operation == "/":
-                    self.operation = DIVIDE
-                    break
+                self.operation = ComplexNumber.get_sign_for_operation(operation)
+                return self.operation
             except AttributeError as ex:
                 print("Wrong input")
-                continue
 
     def define_operation(self):
         print("Enter 1st complex number:")

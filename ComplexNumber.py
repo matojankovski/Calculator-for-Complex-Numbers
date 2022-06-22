@@ -59,6 +59,22 @@ class ComplexNumber:
         return final_number
 
     @staticmethod
+    def get_sign_for_operation(sign_input):
+        if sign_input == "+":
+            sign = "ADD"
+        elif sign_input == "-":
+            sign = "SUBTRACT"
+        elif sign_input == "*":
+            sign = "MULTIPLY"
+        elif sign_input == "/":
+            sign = "DIVIDE"
+        else:
+            raise AttributeError("INCORRECT OPERATION SIGN")
+        return sign
+
+
+
+    @staticmethod
     def get_impedance(value, frequency):
         if frequency == 0:
             return ComplexNumber(value, 0)
@@ -111,13 +127,14 @@ class ComplexNumber:
         return "Rectangular form: {}{}{}{}\n{}".format(round(self.real_part, 6), operator, round(self.imag_part, 6),
                                                        imag_char, self.display_in_polar_form())
 
-
     def display_in_polar_form(self):
-        if self.real_part == 0:
-        # if self.imag_part == 0 or self.real_part == 0:
-            modulus = math.sqrt(self.real_part ** 2 + self.imag_part ** 2)
-            phase = 90
-            answer = "Polar form: {}∠{}°".format(round(modulus, 4), round(phase, 2))
+        # if self.real_part == 0:
+        #TODO CHECK POLAR FORM
+        if self.imag_part == 0 or self.real_part == 0:
+            answer = "This number does not have polar form."
+            # modulus = math.sqrt(self.real_part ** 2 + self.imag_part ** 2)
+            # phase = 90
+            # answer = "Polar form: {}∠{}°".format(round(modulus, 4), round(phase, 2))
         else:
             modulus = math.sqrt(self.real_part ** 2 + self.imag_part ** 2)
             phase = math.atan(self.imag_part / self.real_part) * 180 / math.pi

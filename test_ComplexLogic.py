@@ -8,7 +8,7 @@ from ComplexNumber import ComplexNumber
 class MyTestCase(unittest.TestCase):
 
 
-    def test_ParseComplexNumer(self):
+    def test_parse_complex_numer(self):
         self.assertEqual(ComplexNumber.parse_complex_numer("4.5-5.7i"), ComplexNumber(4.5, -5.7))
         self.assertEqual(ComplexNumber.parse_complex_numer("-1i"), ComplexNumber(0, -1))
         self.assertEqual(ComplexNumber.parse_complex_numer("-i"), ComplexNumber(0, -1))
@@ -19,7 +19,7 @@ class MyTestCase(unittest.TestCase):
         self.assertRaises(AttributeError, ComplexNumber.parse_complex_numer, "+")
 
     @mock.patch("builtins.input", create=True)
-    def test_GetComplexNumber(self, mocked_input):
+    def test_get_complex_number(self, mocked_input):
         mocked_input.side_effect = ["2.5", "2.5i", "-2.5", "-2.5i", "2.5+2.5i", "-2.5-2.5i", "0+0i", "j", ".4i", "i", "2+i", "2-i", "0-5i"]
         calculator = Calculator()
         self.assertEqual(calculator.get_complex_number(), ComplexNumber(2.5, 0))
@@ -36,7 +36,39 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(calculator.get_complex_number(), ComplexNumber(2, -1))
         self.assertEqual(calculator.get_complex_number(), ComplexNumber(0, -5))
 
-    def testAdd(self):
+    def test_parse_value(self):
+        self.assertEqual(ComplexNumber.parse_value("4m"), 0.004)
+        self.assertEqual(ComplexNumber.parse_value("4.5m"), 0.0045)
+        self.assertEqual(ComplexNumber.parse_value("4"), 4)
+        self.assertEqual(ComplexNumber.parse_value("4.5"), 4.5)
+        self.assertEqual(ComplexNumber.parse_value("4G"), 4000000)
+        self.assertRaises(AttributeError, ComplexNumber.parse_value, "+")
+        self.assertRaises(AttributeError, ComplexNumber.parse_value, "-1")
+        self.assertRaises(AttributeError, ComplexNumber.parse_value, "l")
+        self.assertRaises(AttributeError, ComplexNumber.parse_value, "-4m")
+
+
+
+
+
+    @mock.patch("builtins.input", create=True)
+    def test_get_value_of_element(self, mocked_input):
+        mocked_input.side_effect = ["4m", "4", "4.5m", "0.5", "20m"]
+        calculator = Calculator()
+        self.assertEqual(calculator.get_value_of_element(), 0.004)
+        self.assertEqual(calculator.get_value_of_element(), 4)
+        self.assertEqual(calculator.get_value_of_element(), 0.0045)
+        self.assertEqual(calculator.get_value_of_element(), 0.5)
+        self.assertEqual(calculator.get_value_of_element(), 0.02)
+
+    def test_get_sign_for_operation(self):
+        self.assertEqual(ComplexNumber.get_sign_for_operation("+"), "ADD")
+        self.assertEqual(ComplexNumber.get_sign_for_operation("-"), "SUBTRACT")
+        self.assertEqual(ComplexNumber.get_sign_for_operation("*"), "MULTIPLY")
+        self.assertEqual(ComplexNumber.get_sign_for_operation("/"), "DIVIDE")
+        self.assertRaises(AttributeError, ComplexNumber.get_sign_for_operation, "INCORRECT OPERATION SIGN")
+
+    def test_add(self):
         number1 = ComplexNumber(5, 5)
         self.assertEqual(number1.add(ComplexNumber(5.2, 5.3)), ComplexNumber(10.2, 10.3))
         number2 = ComplexNumber(-5, -5)
@@ -46,7 +78,7 @@ class MyTestCase(unittest.TestCase):
         number4 = ComplexNumber(2.35, -5.85)
         self.assertEqual(number4.add(ComplexNumber(3.5, 2.85)), ComplexNumber(5.85, -3))
 
-    def testAddComplexNumbers(self):
+    def test_add_complex_numbers(self):
         calculator = Calculator()
         calculator.first_complex_number = ComplexNumber(5, 5)
         calculator.second_complex_number = ComplexNumber(5, 5)
@@ -58,7 +90,7 @@ class MyTestCase(unittest.TestCase):
         calculator.second_complex_number = ComplexNumber(-2.5, 0)
         self.assertEqual(calculator.add_complex_numbers(), ComplexNumber(-4.8, 0))
 
-    def testDivide(self):
+    def test_divide(self):
         number1 = ComplexNumber(5, 5)
         self.assertEqual(number1.divide(ComplexNumber(1, 1)), ComplexNumber(5, 0))
         number2 = ComplexNumber(5, 5)
@@ -68,7 +100,7 @@ class MyTestCase(unittest.TestCase):
         number4 = ComplexNumber(2.5, -7.5)
         self.assertEqual(number4.divide(ComplexNumber(-4.5, 3.25)), ComplexNumber(-1.16, 0.83))
 
-    def testDivideComplexNumbers(self):
+    def test_divide_complex_numbers(self):
         calculator = Calculator()
         calculator.first_complex_number = ComplexNumber(5, 5)
         calculator.second_complex_number = ComplexNumber(2, 2)
@@ -78,7 +110,7 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(calculator.divide_complex_numbers(), ComplexNumber(0, 2))
 
 
-    def testSubtract(self):
+    def test_subtract(self):
         number1 = ComplexNumber(-5, -5)
         self.assertEqual(number1.subtract(ComplexNumber(5, 5)), ComplexNumber(-10, -10))
         number2 = ComplexNumber(-5, -5)
@@ -90,7 +122,7 @@ class MyTestCase(unittest.TestCase):
         number5 = ComplexNumber(-5.2, -5.4)
         self.assertEqual(number5.subtract(ComplexNumber(5.1, 5.6)), ComplexNumber(-10.3, -11.0))
 
-    def testSubtrackComplexNumbers(self):
+    def test_subtrack_complex_numbers(self):
         calculator = Calculator()
         calculator.first_complex_number = ComplexNumber(-5, -5)
         calculator.second_complex_number = ComplexNumber(5, 5)
@@ -102,7 +134,7 @@ class MyTestCase(unittest.TestCase):
         calculator.second_complex_number = ComplexNumber(0,0)
         self.assertEqual(calculator.subtrack_complex_numbers(), ComplexNumber(-2.5, -8.5))
 
-    def testMultiply(self):
+    def test_multiply(self):
         number1 = ComplexNumber(1, 1)
         self.assertEqual(number1.multiply(ComplexNumber(5, 5)), ComplexNumber(0, 10))
         number2 = ComplexNumber(0, 0)
@@ -116,7 +148,7 @@ class MyTestCase(unittest.TestCase):
         number5 = ComplexNumber(-5.2, -5.4)
         self.assertEqual(number5.multiply(ComplexNumber(5.1, 5.6)), ComplexNumber(3.72, -56.66))
 
-    def testMultiplyComplexNumbers(self):
+    def test_multiply_complex_numbers(self):
         calculator = Calculator()
         calculator.first_complex_number = ComplexNumber(1, 1)
         calculator.second_complex_number = ComplexNumber(5, 5)
@@ -128,7 +160,7 @@ class MyTestCase(unittest.TestCase):
         calculator.second_complex_number = ComplexNumber(-5.2, -5.4)
         self.assertEqual(calculator.multiply_complex_numbers(), ComplexNumber(3.72, -56.66))
 
-    def testDisplayInPolarForm(self):
+    def test_display_in_polar_form(self):
         number1 = ComplexNumber(4.2, 2.2)
         self.assertEqual(number1.display_in_polar_form(), "Polar form: 4.7413∠27.65°")
         number1 = ComplexNumber(4.2, -2.2)
@@ -147,7 +179,7 @@ class MyTestCase(unittest.TestCase):
         # number1 = ComplexNumber(0, 5)
         # self.assertEqual(number1.display_in_polar_form(), "This number doesn't have a polar form.")
 
-    def testParseValue(self):
+    def test_parse_value(self):
         self.assertEqual(ComplexNumber.parse_value("4m"), 0.004)
         self.assertEqual(ComplexNumber.parse_value("4"), 4)
         self.assertEqual(ComplexNumber.parse_value("4.5m"), 0.0045)
@@ -158,7 +190,7 @@ class MyTestCase(unittest.TestCase):
         self.assertRaises(AttributeError, ComplexNumber.parse_value, "m")
         self.assertRaises(AttributeError, ComplexNumber.parse_value, ".")
 
-    def testGetImpedance(self):
+    def test_get_impedance(self):
         self.assertEqual(ComplexNumber.get_impedance(200, 0), ComplexNumber(200, 0))
         self.assertEqual(ComplexNumber.get_impedance(2.5, 0), ComplexNumber(2.5, 0))
         self.assertEqual(ComplexNumber.get_impedance(0.01, 1000), ComplexNumber(0, 62.831853))
